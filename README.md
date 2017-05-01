@@ -38,7 +38,15 @@ Options include:
 ``` js
 {
   tokenize: function(str) {
-    return str.split(' ') // pass in custom tokenizer
+    return str.split(' ') // Pass in a custom tokenizer
+  },
+  frequency: function(tokens) {
+      // Pass in a custom frequency generator
+      var table = {}
+      tokens.forEach(function (token) {
+        table[token] = (table[token] || 0) + 1
+      })
+      return table
   }
 }
 ```
