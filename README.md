@@ -110,3 +110,6 @@ q.all(thingsToDo)
 ## License
 
 MIT
+
+[npm-image]: https://img.shields.io/npm/v/leveldb-naive-bayes.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/leveldb-naive-bayes
