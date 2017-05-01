@@ -1,20 +1,18 @@
-'use strict';
-
 var after = require('after-all');
 var mutexify = require('mutexify');
 var through = require('through2');
 var pump = require('pump');
 var b = require('bluebird');
-var noop = function noop() {};
+var noop = function () {};
 
-var defaultTokenize = function defaultTokenize(str) {
+var defaultTokenize = function (str) {
   str = str.replace(/[^\w\s]/g, ' ').trim();
   return !str ? [] : str.split(/\s+/).map(function (s) {
     return s.toLowerCase();
   });
 };
 
-var get = function get(db, names, cb) {
+var get = function (db, names, cb) {
   var result = {};
 
   var next = after(function (err) {
@@ -33,7 +31,7 @@ var get = function get(db, names, cb) {
   });
 };
 
-var defaultFrequencyTable = function frequencyTable(tokens) {
+var defaultFrequencyTable = function (tokens) {
   var table = {};
 
   tokens.forEach(function (token) {
@@ -49,9 +47,9 @@ module.exports = function (db, opts) {
   var that = {};
   var lock = mutexify();
   var tokenize = opts.tokenize || defaultTokenize;
-  var frequencyTable = opts.frequency || defaultFrequencyTable
+  var frequencyTable = opts.frequency || defaultFrequencyTable;
 
-  var train = function train(category, tokens, cb) {
+  var train = function (category, tokens, cb) {
     if (!cb) cb = noop;
     if (typeof tokens === 'string') tokens = tokenize(tokens);
 
@@ -61,7 +59,7 @@ module.exports = function (db, opts) {
     var catTokens = 'tokens!' + category;
     var vocInc = 0;
 
-    var put = function put(key, value) {
+    var put = function (key, value) {
       batch.push({
         type: 'put',
         key: key,
@@ -129,7 +127,7 @@ module.exports = function (db, opts) {
     var freqs = frequencyTable(tokens);
     var chosen = null;
 
-    var write = function write(data, enc, cb) {
+    var write = function (data, enc, cb) {
       var category = data.key.slice('samples!'.length);
       var catSamples = Number(data.value);
       var catFreq = 'frequency!' + category + '!';
@@ -156,7 +154,7 @@ module.exports = function (db, opts) {
 
         if (logProb > maxProp) {
           maxProp = logProb;
-          chosen = {category,match:100+logProb};
+          chosen = { category, match: 100 + logProb };
         }
 
         cb();
@@ -177,7 +175,7 @@ module.exports = function (db, opts) {
     var freqs = frequencyTable(tokens);
     var chosen = [];
 
-    var write = function write(data, enc, cb) {
+    var write = function (data, enc, cb) {
       var category = data.key.slice('samples!'.length);
       var catSamples = Number(data.value);
       var catFreq = 'frequency!' + category + '!';
@@ -210,9 +208,7 @@ module.exports = function (db, opts) {
 
     pump(db.createReadStream({ gt: 'samples!', lt: 'samples!\xff' }), through.obj(write), function (err) {
       if (err) return cb(err);
-      cb(null, chosen.sort(function (a, b) {
-        return b.logProb - a.logProb;
-      }));
+      cb(null, chosen.sort((a, b) => b.logProb - a.logProb));
     });
   };
 

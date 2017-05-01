@@ -12,8 +12,8 @@ tape('postive / negative', function (t) {
       t.notOk(err, 'no err')
       nb.train('negative', 'terrible, shitty thing. Damn. Sucks!!', err => {
         t.notOk(err, 'no err')
-        nb.classify('awesome, cool, amazing!! Yay.', (err, category) => {
-          t.same(category, 'positive', 'should be positive')
+        nb.classify('awesome, cool, amazing!! Yay.', (err, out) => {
+          t.same(out.category, 'positive', 'should be positive')
           t.end()
         })
       })
@@ -30,8 +30,8 @@ tape('spam / not spam', function (t) {
       t.notOk(err, 'no err')
       nb.train('not spam', 'Some more strings that are not spam!', err => {
         t.notOk(err, 'no err')
-        nb.classify('Great opportunity in Nigeria!', (err, category) => {
-          t.same(category, 'spam', 'should be spam')
+        nb.classify('Great opportunity in Nigeria!', (err, out) => {
+          t.same(out.category, 'spam', 'should be spam')
           t.end()
         })
       })
@@ -50,8 +50,8 @@ tape('train with promise', (t) => {
       return nb.trainAsync('negative', 'terrible, shitty thing. Damn. Sucks!!');
     })
     .then(function () {
-      return nb.classify('awesome, cool, amazing!! Yay.', (err, category) => {
-        t.same('positive', category, 'should be positive')
+      return nb.classify('awesome, cool, amazing!! Yay.', (err, out) => {
+        t.same('positive', out.category, 'should be positive')
         t.end()
       })
     })
@@ -67,8 +67,8 @@ tape('que all train promises', (t) => {
   ];
 
   q.all(thingsToDo).then(() => {
-    return nb.classify('awesome, cool, amazing!! Yay.', (err, category) => {
-      t.same('positive', category, 'should be positive')
+    return nb.classify('awesome, cool, amazing!! Yay.', (err, out) => {
+      t.same('positive', out.category, 'should be positive')
       t.end()
     })
   })
@@ -85,8 +85,8 @@ tape('classify can be used as promise', (t) => {
 
   q.all(thingsToDo)
     .then(() => nb.classifyAsync('awesome, cool, amazing!! Yay.'))
-    .then((category) => {
-      t.same('positive', category, 'should be positive')
+    .then((out) => {
+      t.same('positive', out.category, 'should be positive')
       t.end()
     })
 })

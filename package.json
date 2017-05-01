@@ -11,6 +11,7 @@
     "through2": "~2.0.0"
   },
   "devDependencies": {
+    "babel-cli": "^6.24.1",
     "codecov.io": "^0.1.6",
     "istanbul": "^0.4.0",
     "memdb": "~1.0.1",
@@ -23,7 +24,8 @@
     "prepublish": "babel index.js --out-file index-es5.js"
   },
   "pre-commit": [
-    "test", "prepublish"
+    "test",
+    "prepublish"
   ],
   "repository": {
     "type": "git",
