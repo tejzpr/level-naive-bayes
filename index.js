@@ -32,7 +32,7 @@ var get = function (db, names, cb) {
   })
 }
 
-var frequencyTable = function (tokens) {
+var defaultFrequencyTable = function (tokens) {
   var table = {}
 
   tokens.forEach(function (token) {
@@ -48,6 +48,7 @@ module.exports = function (db, opts) {
   var that = {}
   var lock = mutexify()
   var tokenize = opts.tokenize || defaultTokenize
+  var frequencyTable = opts.frequency || defaultFrequencyTable
 
   var train = function (category, tokens, cb) {
     if (!cb) cb = noop
@@ -153,8 +154,8 @@ module.exports = function (db, opts) {
         })
 
         if (logProb > maxProp) {
-          maxProp = logProb
-          chosen = category
+          maxProp = logProb;
+          chosen = {category,match:100+logProb};
         }
 
         cb()
