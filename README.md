@@ -1,16 +1,13 @@
-# level-naive-bayes
+# leveldb-naive-bayes
 
 Naive Bayes text classifier that runs on top of leveldb. Based on the [bayes](https://github.com/ttezel/bayes) module.
 It returns log-probabilities.
 [Log_probaility](https://en.wikipedia.org/wiki/Log_probability)
 
 ```
-npm install syzer-level-naive-bayes
+npm install leveldb-naive-bayes
 ```
-[![build status](http://img.shields.io/travis/syzer/level-naive-bayes.svg?style=flat)](http://travis-ci.org/syzer/level-naive-bayes)
-[![Dependency Status](https://david-dm.org/syzer/level-naive-bayes.svg)](https://david-dm.org/syzer/level-naive-bayes)
-[![devDependency Status](https://david-dm.org/syzer/level-naive-bayes/dev-status.svg)](https://david-dm.org/syzer/level-naive-bayes#info=devDependencies)
-[![Code Coverage](https://img.shields.io/codecov/c/github/syzer/level-naive-bayes/master.svg)](https://codecov.io/github/syzer/level-naive-bayes?branch=master)
+[![NPM version][npm-image]][npm-url] [![Known Vulnerabilities](https://snyk.io/test/github/tejzpr/level-naive-bayes/badge.svg)](https://snyk.io/test/github/tejzpr/level-naive-bayes)
 
 ## Usage
 
@@ -22,8 +19,9 @@ var nb = bayes(db) // where db is a levelup instance
 nb.train('positive', 'amazing, awesome movie!! Yeah!! Oh boy.', function() {
   nb.train('positive', 'this is incredibly, amazing, perfect, great!', function() {
     nb.train('negative', 'terrible, shitty thing. Damn. Sucks!!', function() {
-      nb.classify('awesome, cool, amazing!! Yay.', function(err, category) {
-        console.log('category is '+category)
+      nb.classify('awesome, cool, amazing!! Yay.', function(err, out) {
+        console.log('category is '+out.category)
+        console.log('probability is '+out.match)
       })
     })
   })
@@ -61,8 +59,8 @@ Returns a promise of finished training, usage:
 
 ``` js
 nb.trainAsync('positive', 'amazing, awesome movie!! Yeah!! Oh boy.').then(function () {
-  return nb.classify('awesome, cool, amazing!! Yay.', function (err, category) {
-    console.log('positive', category);
+  return nb.classify('awesome, cool, amazing!! Yay.', function (err, out) {
+    console.log('positive', out.category);
   })
 })
 ```
